@@ -1,11 +1,21 @@
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HTMLWebpackPlugin = require('html-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin');
+const {TsconfigPathsPlugin} = require('tsconfig-paths-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
     mode: 'production',
     module: {
         rules: [{
+            test: /\.ts$/,
+            loader: 'awesome-typescript-loader',
+            options: {
+                configFileName: 'tsconfig.dev.json'
+            }
+        },
+        {
             test: /\.(js)$/,
             exclude: /node_modules/,
             use: {
@@ -29,14 +39,29 @@ module.exports = {
         minimizer: [new TerserPlugin()]
     },
     plugins: [
+        new CleanWebpackPlugin({
+            cleanAfterEveryBuildPatterns: ['dist']
+        }),
         new CopyWebpackPlugin({
             patterns: [{ from: 'src/assets', to: 'assets' }]
         }),
-        new HTMLWebpackPlugin({
+        new HtmlWebpackPlugin({
             template: 'index.html',
             filename: 'index.html',
             hash: true,
             minify: false
         })
-    ]
+    ],
+    resolve: {
+        plugins: [
+            new TsconfigPathsPlugin({
+                configFile: './tsconfig.dev.json'
+            })
+        ],
+        extensions: ['.ts', '.js']
+    },
+    output: {
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist')
+    }
 }

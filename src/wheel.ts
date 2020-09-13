@@ -1,19 +1,26 @@
-import * as PIXI from 'pixi.js-legacy'
-import palette from 'google-palette'
-import 'fontsource-nunito-sans/400.css'
-import WheelSlice from "./WheelSlice"
+import * as PIXI from 'pixi.js'
+import WheelSlice from './wheel-slice'
+import palette from 'distinct-colors'
+import {SpinOptions, WheelOptions} from "./types"
 
 export default class Wheel extends PIXI.Container {
-    constructor (app,
-                 {
-                     radius,
-                     slices,
-                     winningCopy,
-                     placeholderCopies
-                 }) {
+    private slices: WheelSlice[]
+    private winningSliceIndex: number
+    spinOptions: SpinOptions
+    spinStart: number
+    isSpinning: boolean
+
+    constructor(
+        app: PIXI.Application,
+        name: string,
+        options : WheelOptions
+    ) {
         super()
-        let colours = palette('tol-rainbow', slices)
-        this.name = 'wheel'
+        const {slices, winningCopy, placeholderCopies, radius} = options
+        let colours = palette({
+            count: slices
+        })
+        this.name = name
         this.slices = []
         const angle = 360 / slices
         this.winningSliceIndex = slices - 1 // Math.floor(Math.random() * slices)
@@ -26,20 +33,18 @@ export default class Wheel extends PIXI.Container {
             } else {
                 copy = placeholderCopies[Math.floor(Math.random() * placeholderCopies.length)]
             }
-            const wheelPortion = new WheelPortion(
+            const wheelPortion = new WheelSlice(
                 this,
                 radius,
-                PIXI.utils.string2hex(colours[i]),
+                colours[i].num(),
                 undefined,
                 angle,
                 angle * i,
                 copy,
                 i === this.winningSliceIndex
             )
-            wheelPortion.position = {
-                x: app.screen.width / 2,
-                y: app.screen.height / 2
-            }
+            wheelPortion.position.x = app.screen.width / 2
+            wheelPortion.position.y = app.screen.height / 2
             this.addChild(wheelPortion)
             this.slices.push(wheelPortion)
         }
@@ -53,27 +58,26 @@ export default class Wheel extends PIXI.Container {
         pin.angle = 90
         this.addChild(pin)
         let circle = new PIXI.Graphics()
-        circle.drawCircle(0,0, radius)
+        circle.drawCircle(0, 0, radius)
         circle.lineStyle(10, 0xffffff)
         this.addChild(circle)
     }
 
-    move(delta) {
+    move(delta: number) {
         this.slices.forEach(slice => slice.move(delta))
     }
 
-    spin(forcedIndex = undefined) {
+    spin(forcedIndex: number = undefined) {
         if (forcedIndex) {
-            const minExpectedRotation = this.winningSliceIndex * this.slices.length / 360 + 1
-            const maxExpectedRotation = this.winningSliceIndex * (this.slices.length / 360 + 1) - 1
-            const expectedRotation = minExpectedRotation + Math.random() * (maxExpectedRotation - minExpectedRotation)
-
+            // const minExpectedRotation = this.winningSliceIndex * this.slices.length / 360 + 1
+            // const maxExpectedRotation = this.winningSliceIndex * (this.slices.length / 360 + 1) - 1
+            // const expectedRotation = minExpectedRotation + Math.random() * (maxExpectedRotation - minExpectedRotation)
         }
         this.spinOptions = {
             totalDuration: 6000,
             accelerationDuration: 2000,
             maxSpeed: 0.3
-        };
+        }
         this.spinStart = Date.now()
         this.isSpinning = true
     }

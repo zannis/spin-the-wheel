@@ -1,8 +1,22 @@
-import * as PIXI from "./pixi";
+import * as PIXI from 'pixi.js'
+import Wheel from "./wheel"
+import {SpinOptions} from "./types";
 
-export default class WheelPortion extends PIXI.Graphics {
+export default class WheelSlice extends PIXI.Graphics {
+    wheel: Wheel
+    private readonly debug: boolean
+    private angleStart: number
+    // private isSpinning: boolean
 
-    constructor (wheel, radius, color, lineColor = 0x000, angle, angleOffset, text = 'sample text', debug = false) {
+    constructor (
+        wheel: Wheel,
+        radius: number,
+        color: number,
+        lineColor = 0x000,
+        angle: number,
+        angleOffset: number,
+        text = 'sample text',
+        debug = false) {
         super()
 
         let s = 0
@@ -14,31 +28,28 @@ export default class WheelPortion extends PIXI.Graphics {
             align: 'left'
         })
         label.anchor.set(0, 0)
-        label.pivot.x = 0 //radius / 2
-        label.pivot.y = label.height / 2 //radius / 2
+        label.pivot.x = 0 // radius / 2
+        label.pivot.y = label.height / 2 // radius / 2
         label.angle = angle / 2
         let minLabelRadius = Math.min(radius * 0.3, radius - label.width) + (radius * 0.05)
         let maxLabelRadius = Math.max(radius * 0.5, radius - label.width) - (radius * 0.05)
         let meanLabelRadius = (maxLabelRadius + minLabelRadius) / 2
         label.x = meanLabelRadius * Math.cos(PIXI.DEG_TO_RAD * angle / 2)
-        label.y = meanLabelRadius * Math.sin(PIXI.DEG_TO_RAD * angle / 2) //- (label.height / 2)
+        label.y = meanLabelRadius * Math.sin(PIXI.DEG_TO_RAD * angle / 2) // - (label.height / 2)
         this.addChild(label)
         let labelBorders = new PIXI.Graphics()
         labelBorders
-            .lineStyle({
-                color: 0x243343,
-                width: 4
-            })
-            .moveTo(label.x,label.y)
-            .lineTo(label.x, label.y + label.height)
-            .lineTo(label.x + label.width, label.y + label.height)
-            .lineTo(label.x + label.width, label.y)
-            .lineTo(label.x,label.y)
+        .lineStyle(4,  0x243343)
+        .moveTo(label.x, label.y)
+        .lineTo(label.x, label.y + label.height)
+        .lineTo(label.x + label.width, label.y + label.height)
+        .lineTo(label.x + label.width, label.y)
+        .lineTo(label.x, label.y)
         // this.addChild(labelBorders)
         this.wheel = wheel
         this.pivot.x = 0
         this.pivot.y = 0
-        this.isSpinning = false
+        // this.isSpinning = false
         this.debug = debug
         this.angleStart = angle
         this.lineStyle(s, c)
@@ -50,15 +61,12 @@ export default class WheelPortion extends PIXI.Graphics {
         this.endFill()
         let borders = new PIXI.Graphics()
         borders
-            .lineStyle({
-                color: 0x243343,
-                width: 4
-            })
-            .moveTo(0,0)
-            .lineTo(0, 0 + this.height)
-            .lineTo(0 + this.width, 0 + this.height)
-            .lineTo(0 + this.width, 0)
-            .lineTo(0,0)
+        .lineStyle(4, 0x243343)
+        .moveTo(0, 0)
+        .lineTo(0, 0 + this.height)
+        .lineTo(0 + this.width, 0 + this.height)
+        .lineTo(0 + this.width, 0)
+        .lineTo(0, 0)
 
         // this.addChild(borders)
         // let halfCircle = new PIXI.Graphics()
@@ -68,19 +76,18 @@ export default class WheelPortion extends PIXI.Graphics {
         // this.addChild(halfCircle)
     }
 
-    spin(delta, {
-        totalDuration,
-        accelerationDuration: accelerationTime,
-        maxSpeed
-    },
-         debug) {
-        const decelerationTime = totalDuration - accelerationTime
+    spin (
+        delta: number,
+        options: SpinOptions,
+        debug: boolean) {
+        const {totalDuration, accelerationDuration, maxSpeed} = options
+        const decelerationTime = totalDuration - accelerationDuration
         const currentTime = Date.now() - this.wheel.spinStart
-        const accelerationSpeed = maxSpeed * (currentTime / accelerationTime)
-        const decelerationSpeed = maxSpeed * (1 - (currentTime - accelerationTime) / decelerationTime)
-        const logAS = Math.log(1 / accelerationSpeed)
+        const accelerationSpeed = maxSpeed * (currentTime / accelerationDuration)
+        const decelerationSpeed = maxSpeed * (1 - (currentTime - accelerationDuration) / decelerationTime)
+        // const logAS = Math.log(1 / accelerationSpeed)
 
-        if (currentTime <= accelerationTime) {
+        if (currentTime <= accelerationDuration) {
             // this.rotation += accelerationSpeed * delta
             this.angle += PIXI.RAD_TO_DEG * accelerationSpeed * delta
             if (debug) console.debug(`accelerating ${this.angle}`)
@@ -94,7 +101,7 @@ export default class WheelPortion extends PIXI.Graphics {
         }
     }
 
-    move(delta) {
+    move (delta: number) {
         if (this.wheel.isSpinning) {
             this.spin(delta, this.wheel.spinOptions, this.debug)
         } else {
