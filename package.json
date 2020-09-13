@@ -1,0 +1,50 @@
+{
+  "name": "spin-the-wheel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --config webpack.config.dev.js",
+    "production": "webpack --mode production --config webpack.config.prod.js",
+    "build": "webpack --mode development --config webpack.config.dev.js",
+    "lint": "eslint --fix ./src/*.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pixi/app": "^5.3.3",
+    "@pixi/constants": "^5.3.3",
+    "@pixi/core": "^5.3.3",
+    "@pixi/display": "^5.3.3",
+    "@pixi/graphics": "^5.3.3",
+    "@pixi/interaction": "^5.3.3",
+    "@pixi/loaders": "^5.3.3",
+    "@pixi/math": "^5.3.3",
+    "@pixi/runner": "^5.3.3",
+    "@pixi/settings": "^5.3.3",
+    "@pixi/sprite": "^5.3.3",
+    "@pixi/text": "^5.3.3",
+    "@pixi/ticker": "^5.3.3",
+    "@pixi/utils": "^5.3.3",
+    "fontsource-nunito-sans": "^3.0.3",
+    "google-palette": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^6.0.3",
+    "css-loader": "^4.2.1",
+    "eslint": "^7.7.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "html-webpack-plugin": "^4.3.0",
+    "style-loader": "^1.2.1",
+    "terser-webpack-plugin": "^4.1.0",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
