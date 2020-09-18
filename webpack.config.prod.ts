@@ -15,13 +15,13 @@ module.exports = {
                 configFileName: 'tsconfig.dev.json'
             }
         },
-        {
-            test: /\.(js)$/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader'
-            }
-        },
+        // {
+        //     test: /\.(js)$/,
+        //     exclude: /node_modules/,
+        //     use: {
+        //         loader: 'babel-loader'
+        //     }
+        // },
         {
             test: /\.css$/,
             loader: [
@@ -55,7 +55,7 @@ module.exports = {
     resolve: {
         plugins: [
             new TsconfigPathsPlugin({
-                configFile: './tsconfig.dev.json'
+                configFile: './tsconfig.prod.json'
             })
         ],
         extensions: ['.ts', '.js']

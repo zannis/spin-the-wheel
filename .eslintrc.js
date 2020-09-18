@@ -1,54 +1,67 @@
-{
-  "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "jsx": true
+module.exports = {
+  root: true,
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: 2020,
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.dev.json'],
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true,
+      jsx: true
     },
-    "sourceType": "module"
+    sourceType: "module"
   },
 
-  "env": {
-    "es6": true,
-    "node": true
+  env: {
+    es6: true,
+    node: true
   },
 
-  "plugins": [
-    "standard"
+  plugins: [
+    "@typescript-eslint", "standard"
   ],
 
-  "globals": {
-    "document": false,
-    "navigator": false,
-    "window": false
+  extends: [
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint",
+  ],
+
+  globals: {
+    document: false,
+    navigator: false,
+    window: false
   },
 
-  "rules": {
+  rules: {
+    "@typescript-eslint/unbound-method": "off", //pixijs binds differently to .bind
+    "prettier/prettier": "warn",
     "accessor-pairs": 2,
-    "arrow-spacing": [2, { "before": true, "after": true }],
+    "arrow-spacing": [2, { before: true, after: true }],
     "block-spacing": [2, "always"],
-    "brace-style": [2, "1tbs", { "allowSingleLine": true }],
-    "camelcase": [2, { "properties": "never" }],
-    "comma-dangle": [2, "never"],
-    "comma-spacing": [2, { "before": false, "after": true }],
+    "brace-style": [2, "1tbs", { allowSingleLine: true }],
+    camelcase: [2, { properties: "never" }],
+    "comma-spacing": [2, { before: false, after: true }],
     "comma-style": [2, "last"],
     "constructor-super": 2,
-    "curly": [2, "multi-line"],
+    curly: [2, "multi-line"],
     "dot-location": [2, "property"],
     "eol-last": 2,
-    "eqeqeq": [2, "allow-null"],
+    eqeqeq: [2, "allow-null"],
     "func-call-spacing": [2, "never"],
     "handle-callback-err": [2, "^(err|error)$" ],
-    "indent": [2, 4, { "SwitchCase": 0, "MemberExpression": 0 }],
-    "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
-    "keyword-spacing": [2, { "before": true, "after": true }],
-    "new-cap": [2, { "newIsCap": true, "capIsNew": false }],
+    indent: [2, 4, { SwitchCase: 0 }],
+    "key-spacing": [2, { beforeColon: false, afterColon: true }],
+    "keyword-spacing": [2, { before: true, after: true }],
+    "new-cap": [2, { newIsCap: true, capIsNew: false }],
     "new-parens": 2,
     "no-array-constructor": 2,
     "no-caller": 2,
     "no-class-assign": 2,
     "no-cond-assign": 2,
     "no-const-assign": 2,
-    "no-constant-condition": [2, { "checkLoops": false }],
+    "no-constant-condition": [2, { checkLoops: false }],
     "no-control-regex": 2,
     "no-debugger": 2,
     "no-delete-var": 2,
@@ -75,12 +88,12 @@
     "no-irregular-whitespace": 2,
     "no-iterator": 2,
     "no-label-var": 2,
-    "no-labels": [2, { "allowLoop": false, "allowSwitch": false }],
+    "no-labels": [2, { allowLoop: false, allowSwitch: false }],
     "no-lone-blocks": 2,
     "no-mixed-spaces-and-tabs": 2,
     "no-multi-spaces": 2,
     "no-multi-str": 2,
-    "no-multiple-empty-lines": [2, { "max": 1 }],
+    "no-multiple-empty-lines": [2, { max: 1 }],
     "no-native-reassign": 2,
     "no-negated-in-lhs": 2,
     "no-new": 2,
@@ -100,7 +113,7 @@
     "no-self-assign": 2,
     "no-self-compare": 2,
     "no-sequences": 2,
-    "no-shadow": ["error", { "builtinGlobals": false, "hoist": "all", "allow": [] }],
+    "no-shadow": ["error", { builtinGlobals: false, hoist: "all", allow: [] }],
     "no-shadow-restricted-names": 2,
     "no-sparse-arrays": 2,
     "no-tabs": 2,
@@ -112,11 +125,11 @@
     "no-undef-init": 2,
     "no-unexpected-multiline": 2,
     "no-unmodified-loop-condition": 2,
-    "no-unneeded-ternary": [2, { "defaultAssignment": false }],
+    "no-unneeded-ternary": [2, { defaultAssignment: false }],
     "no-unreachable": 2,
     "no-unsafe-finally": 2,
     "no-unsafe-negation": 2,
-    "no-unused-vars": [1, { "vars": "all", "args": "none" }],
+    "no-unused-vars": [1, { vars: "all", args: "none" }],
     "no-useless-call": 2,
     "no-useless-computed-key": 2,
     "no-useless-constructor": 2,
@@ -124,30 +137,29 @@
     "no-useless-rename": 2,
     "no-whitespace-before-property": 2,
     "no-with": 2,
-    "object-property-newline": [2, { "allowMultiplePropertiesPerLine": true }],
-    "one-var": [2, { "initialized": "never" }],
-    "operator-linebreak": [2, "after", { "overrides": { "?": "before", ":": "before" } }],
+    "object-property-newline": [2, { allowMultiplePropertiesPerLine: true }],
+    "one-var": [2, { initialized: "never" }],
+    "operator-linebreak": [2, "after", { overrides: { "?": "before", ":": "before" } }],
     "padded-blocks": [2, "never"],
-    "quotes": [2, "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+    quotes: [2, "single", { avoidEscape: true, allowTemplateLiterals: true }],
     "rest-spread-spacing": [2, "never"],
-    "semi": [2, "never"],
-    "semi-spacing": [2, { "before": false, "after": true }],
+    semi: [2, "never"],
+    "semi-spacing": [2, { before: false, after: true }],
     "space-before-blocks": [2, "always"],
-    "space-before-function-paren": [2, "always"],
     "space-in-parens": [2, "never"],
     "space-infix-ops": 2,
-    "space-unary-ops": [2, { "words": true, "nonwords": false }],
-    "spaced-comment": [2, "always", { "line": { "markers": ["*package", "!", ","] }, "block": { "balanced": true, "markers": ["*package", "!", ","], "exceptions": ["*"] } }],
+    "space-unary-ops": [2, { words: true, nonwords: false }],
+    "spaced-comment": [2, "always", { line: { markers: ["*package", "!", ","] }, block: { balanced: true, markers: ["*package", "!", ","], exceptions: ["*"] } }],
     "template-curly-spacing": [2, "never"],
     "unicode-bom": [2, "never"],
     "use-isnan": 2,
     "valid-typeof": 2,
     "wrap-iife": [2, "any"],
     "yield-star-spacing": [2, "both"],
-    "yoda": [2, "never"],
+    yoda: [2, "never"],
 
     "standard/object-curly-even-spacing": [2, "either"],
     "standard/array-bracket-even-spacing": [2, "either"],
     "standard/computed-property-even-spacing": [2, "even"],
   }
-}
+};
