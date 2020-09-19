@@ -60,7 +60,7 @@ export default class WheelSlice extends Graphics {
             .lineTo(0 + this.width, 0)
             .lineTo(0, 0)
 
-        this.addChild(borders)
+        // this.addChild(borders)
         // let halfCircle = new PIXI.Graphics()
         // halfCircle.beginFill(0x0f0f0f)
         // halfCircle.drawCircle(0, 0, radius/2)
@@ -76,7 +76,7 @@ export default class WheelSlice extends Graphics {
         const decelerationSpeed = maxSpeed * (1 - (currentTime - accelerationDuration) / decelerationTime)
         // const logAS = Math.log(1 / accelerationSpeed)
 
-        if (currentTime <= accelerationDuration) {
+        if (currentTime <= accelerationDuration && currentTime <= totalDuration) {
             // this.rotation += accelerationSpeed * delta
             this.angle += RAD_TO_DEG * accelerationSpeed * delta
         } else if (currentTime <= totalDuration) {
@@ -86,6 +86,7 @@ export default class WheelSlice extends Graphics {
             this.angle += 0
             if (this.wheel.isSpinning) {
                 this.wheel.isSpinning = false
+                this.wheel.hasSpinned = true
             }
         }
     }
@@ -94,7 +95,7 @@ export default class WheelSlice extends Graphics {
         if (this.wheel.isSpinning) {
             this.spin(delta, this.wheel.spinOptions, this.debug)
         } else {
-            const angleDiff = this.angle - this.angleStart
+            const angleDiff = (this.angle - this.angleStart) % 360
             if (this.debug && angleDiff > 0) console.debug(angleDiff)
             this.angleStart = this.angle
         }

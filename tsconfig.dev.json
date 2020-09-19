@@ -4,14 +4,16 @@
     "target": "es5",
     "typeRoots": [
       "node_modules/@types",
+      "node_modules/@pixi",
       "typings"
     ],
     "noImplicitAny": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "baseUrl": "./src",
-    "types": ["pixi.js"],
-    "outDir": "./dist"
+    "types": ["pixi.js", "@pixi/filter-drop-shadow"],
+    "outDir": "./dist",
+    "moduleResolution": "node"
   },
   "include": [
     "./src"
