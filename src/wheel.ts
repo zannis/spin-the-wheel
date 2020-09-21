@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js-legacy'
 import WheelSlice from './wheel-slice'
 import palette from 'distinct-colors'
 import { SpinOptions, WheelOptions } from './types'
@@ -130,7 +130,7 @@ export default class Wheel extends PIXI.Container {
         sound.default.add({
             spin: 'assets/spin.mp3',
         })
-        // void sound.default.play('spin')
+        void sound.default.play('spin')
         this.spinStart = Date.now()
         this.isSpinning = true
     }

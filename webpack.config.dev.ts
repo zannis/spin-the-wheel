@@ -51,6 +51,9 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin()
     ],
     resolve: {
+        // alias: {
+        //     'pixi.js': path.resolve('./node_modules/pixi.js-legacy')
+        // },
         plugins: [
             new TsconfigPathsPlugin({
                 configFile: './tsconfig.dev.json'

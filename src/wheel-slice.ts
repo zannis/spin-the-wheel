@@ -1,5 +1,5 @@
 import { SpinOptions } from './types'
-import { DEG_TO_RAD, Graphics, RAD_TO_DEG, Text } from 'pixi.js'
+import { DEG_TO_RAD, Graphics, RAD_TO_DEG, Text } from 'pixi.js-legacy'
 import Wheel from './wheel'
 import { borders } from './utils'
 

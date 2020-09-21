@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js-legacy'
 
 export function borders(element: PIXI.DisplayObject) {
     const result = new PIXI.Graphics()

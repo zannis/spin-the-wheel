@@ -1,10 +1,10 @@
-import * as PIXI from 'pixi.js'
+import * as P from 'pixi.js-legacy'
 import Wheel from './wheel'
 import { WheelOptions } from './types'
 import { borders } from './utils'
 
-PIXI.utils.skipHello()
-const app = new PIXI.Application({
+P.utils.skipHello()
+const app = new P.Application({
     width: 1000,
     height: 800,
     antialias: true,
@@ -13,7 +13,7 @@ const app = new PIXI.Application({
 document.body.appendChild(app.view)
 // load the texture we need
 app.loader.load(() => {
-    const stage: PIXI.Container = app.stage
+    const stage: P.Container = app.stage
 
     const _wheel = () => {
         const _wheelName = 'wheel'
@@ -27,7 +27,7 @@ app.loader.load(() => {
     }
 
     const _button = () => {
-        const button = PIXI.Sprite.from('assets/button.svg')
+        const button = P.Sprite.from('assets/button.svg')
         button.width = 100
         button.height = 50
         button.x = 50

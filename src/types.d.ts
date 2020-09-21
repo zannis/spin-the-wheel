@@ -1,4 +1,4 @@
-import { Application, Container, Graphics } from 'pixi.js'
+import { Application, Container, Graphics } from 'pixi.js-legacy'
 
 export interface WheelOptions {
     radius: number
