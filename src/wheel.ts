@@ -3,6 +3,8 @@ import WheelSlice from './wheel-slice'
 import palette from 'distinct-colors'
 import { SpinOptions, WheelOptions } from './types'
 import { DropShadowFilter } from '@pixi/filter-drop-shadow'
+import * as sound from 'pixi-sound'
+import { borders } from './utils'
 
 export default class Wheel extends PIXI.Container {
     slices: WheelSlice[]
@@ -22,7 +24,7 @@ export default class Wheel extends PIXI.Container {
         this.winningSliceIndex = Math.floor(Math.random() * slices)
         this.pivot.x = this.width / 2
         this.pivot.y = this.height / 2
-        this.addChild(this._outerGraphics(app, radius))
+        this.addChild(this._outerGraphics(app, radius, slices))
         const sliceArray = this._slices(app, slices, 2, winningCopy, this.winningSliceIndex, placeholderCopies, radius, _angle)
         this.slices = sliceArray
         this.addChild(...sliceArray)
@@ -32,6 +34,7 @@ export default class Wheel extends PIXI.Container {
         const minExpectedRotation = 360 - (this.winningSliceIndex + 1) * _angle + 5
         const maxExpectedRotation = 360 - this.winningSliceIndex * _angle - 5
         this.expectedRotation = minExpectedRotation + Math.random() * ((maxExpectedRotation - minExpectedRotation) / 2)
+        this.addChild(borders(this))
     }
 
     private _centerGraphics(app: PIXI.Application, radius: number) {
@@ -48,9 +51,10 @@ export default class Wheel extends PIXI.Container {
         center.anchor.set(0.5)
         center.position.x = app.screen.width / 2
         center.position.y = app.screen.height / 2
+        center.addChild(borders(center))
         return center
     }
-    private _outerGraphics(app: PIXI.Application, radius: number) {
+    private _outerGraphics(app: PIXI.Application, radius: number, slices: number) {
         const texture = PIXI.Texture.from('assets/outer-graphics.svg')
         const center = new PIXI.Sprite(texture)
         center.width = 2 * radius * 1.25
@@ -78,6 +82,13 @@ export default class Wheel extends PIXI.Container {
         container.position.x = app.screen.width / 2
         container.position.y = app.screen.width / 11
         container.addChild(bannerSprite, pinSprite)
+        container.addChild(borders(container))
+        container.filters = [
+            new DropShadowFilter({
+                rotation: 90,
+                distance: 10,
+            }),
+        ]
         return container
     }
 
@@ -116,6 +127,10 @@ export default class Wheel extends PIXI.Container {
 
     spin() {
         this.spinOptions = _calculateSpinOptions(this.expectedRotation)
+        sound.default.add({
+            spin: 'assets/spin.mp3',
+        })
+        // void sound.default.play('spin')
         this.spinStart = Date.now()
         this.isSpinning = true
     }

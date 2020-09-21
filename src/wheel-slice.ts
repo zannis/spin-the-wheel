@@ -1,6 +1,7 @@
 import { SpinOptions } from './types'
 import { DEG_TO_RAD, Graphics, RAD_TO_DEG, Text } from 'pixi.js'
 import Wheel from './wheel'
+import { borders } from './utils'
 
 export default class WheelSlice extends Graphics {
     wheel: Wheel
@@ -29,15 +30,7 @@ export default class WheelSlice extends Graphics {
         label.x = meanLabelRadius * Math.cos((DEG_TO_RAD * angle) / 2)
         label.y = meanLabelRadius * Math.sin((DEG_TO_RAD * angle) / 2) // - (label.height / 2)
         this.addChild(label)
-        const labelBorders = new Graphics()
-        labelBorders
-            .lineStyle(4, 0x243343)
-            .moveTo(label.x, label.y)
-            .lineTo(label.x, label.y + label.height)
-            .lineTo(label.x + label.width, label.y + label.height)
-            .lineTo(label.x + label.width, label.y)
-            .lineTo(label.x, label.y)
-        // this.addChild(labelBorders)
+        this.addChild(borders(label))
         this.wheel = wheel
         this.pivot.x = 0
         this.pivot.y = 0
@@ -51,16 +44,6 @@ export default class WheelSlice extends Graphics {
         this.lineTo(0, 0)
         this.angle = angleOffset
         this.endFill()
-        const borders = new Graphics()
-        borders
-            .lineStyle(4, 0x243343)
-            .moveTo(0, 0)
-            .lineTo(0, 0 + this.height)
-            .lineTo(0 + this.width, 0 + this.height)
-            .lineTo(0 + this.width, 0)
-            .lineTo(0, 0)
-
-        // this.addChild(borders)
         // let halfCircle = new PIXI.Graphics()
         // halfCircle.beginFill(0x0f0f0f)
         // halfCircle.drawCircle(0, 0, radius/2)
