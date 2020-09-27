@@ -1,15 +1,27 @@
-import * as PIXI from 'pixi.js-legacy'
+import { Container, Graphics } from 'pixi.js-legacy'
 
-export function borders(element: PIXI.DisplayObject) {
-    const result = new PIXI.Graphics()
-    const bounds = element.getBounds()
-    // const bounds = element.getLocalBounds()
+export function borders(element: Container | Graphics) {
+    const result = new Graphics()
+    // const bounds = element.getBounds()
+    const elementBounds = {
+        x: element.x,
+        y: element.y,
+        width: element.width,
+        height: element.height,
+    }
+    console.log(element.name, elementBounds)
     result
         .lineStyle(4, 0x243343)
-        .moveTo(bounds.x, bounds.y)
-        .lineTo(bounds.x, bounds.y + bounds.height)
-        .lineTo(bounds.x + bounds.width, bounds.y + bounds.height)
-        .lineTo(bounds.x + bounds.width, bounds.y)
-        .lineTo(bounds.x, bounds.y)
+        .moveTo(elementBounds.x, elementBounds.y)
+        .lineTo(elementBounds.x, elementBounds.y + elementBounds.height)
+        .lineTo(elementBounds.x + elementBounds.width, elementBounds.y + elementBounds.height)
+        .lineTo(elementBounds.x + elementBounds.width, elementBounds.y)
+        .lineTo(elementBounds.x, elementBounds.y)
     return result
 }
+
+export function normalizedRadius(value: number) {
+    return Math.min(value, Math.min(Math.floor(window.innerWidth / 2), window.innerHeight / 2) * 0.9)
+}
+
+export const MAX_SLICES = 16

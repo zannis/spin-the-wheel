@@ -8,6 +8,7 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "baseUrl": "./src",
     "types": ["pixi.js-legacy", "@pixi/filter-drop-shadow"],
     "outDir": "./dist",
     "moduleResolution": "node"

@@ -5,11 +5,12 @@
     "typeRoots": [
       "node_modules/pixi.js-legacy"
     ],
+    "lib": ["es6", "dom"],
     "noImplicitAny": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "baseUrl": "./src",
-    "types": ["pixi.js-legacy", "@pixi/filter-drop-shadow"],
+    "types": ["node", "pixi.js-legacy", "@pixi/filter-drop-shadow"],
     "outDir": "./dist",
     "moduleResolution": "node"
   },

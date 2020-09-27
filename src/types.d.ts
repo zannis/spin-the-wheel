@@ -13,6 +13,19 @@ export interface SpinOptions {
     maxSpeed: number
 }
 
+export interface Resizable {
+    resize(options: ResizeOptionsWH | ResizeOptionsRad): void
+}
+
+export interface ResizeOptionsWH {
+    width: number
+    height: number
+}
+
+export interface ResizeOptionsRad {
+    radius: number
+}
+
 export interface Wheel extends Container {
     readonly winningSliceIndex: number
     slices: WheelSlice[]
@@ -21,6 +34,7 @@ export interface Wheel extends Container {
     isSpinning: boolean
     move(delta: number): void
     spin(forcedIndex: number): void
+    resize(width: number, height: number): void
     new (app: Application, name: string, options: WheelOptions): Wheel
 }
 
@@ -30,5 +44,6 @@ export interface WheelSlice extends Graphics {
     angleStart: number
     spin(delta: number, options: SpinOptions, debug: boolean): void
     move(delta: number): void
+    resize(width: number, height: number): void
     new (app: Application, radius: number, color: number, lineColor: number, angle: number, angleOffset: number, copy?: string, debug?: boolean): WheelSlice
 }

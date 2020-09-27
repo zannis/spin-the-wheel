@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "sideEffects": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config webpack.config.dev.ts",
@@ -37,6 +38,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-standard": "^4.0.1",
     "html-webpack-plugin": "^4.3.0",
+    "jest": "^26.4.2",
     "prettier": "^2.1.2",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^4.1.0",
