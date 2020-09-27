@@ -16,8 +16,8 @@ export default class CenterGraphics extends Sprite implements Resizable {
         this.resize({ radius })
     }
     resize(options: ResizeOptionsRad): void {
-        this.width = (2 * options.radius) / 3
-        this.height = (2 * options.radius) / 3
+        this.width = options.radius * 0.6
+        this.height = options.radius * 0.6
         this.position.x = window.innerWidth / 2
         this.position.y = window.innerHeight / 2
     }

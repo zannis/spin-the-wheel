@@ -82,7 +82,7 @@ export default class WheelSlice extends Graphics {
         this.lineTo(0, 0)
         this.endFill()
         // handle label
-        const newLabel = _label(this.text, this.radius, this.angle - this.arcSpan, this.debug)
+        const newLabel = _label(this.text, this.radius, this.arcSpan, this.debug)
         this.removeChildren()
         this.addChild(newLabel)
         if (this.debug) this.addChild(borders(newLabel))
