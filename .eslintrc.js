@@ -14,18 +14,20 @@ module.exports = {
 
   env: {
     es6: true,
-    node: true
+    node: true,
+    'jest/globals': true
   },
 
   plugins: [
-    "@typescript-eslint", "standard"
+    "@typescript-eslint", "standard", "jest"
   ],
 
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    "plugin:prettier/recommended",
-    "prettier/@typescript-eslint",
+    'plugin:prettier/recommended',
+    'prettier/@typescript-eslint',
+    'plugin:jest/recommended'
   ],
 
   globals: {

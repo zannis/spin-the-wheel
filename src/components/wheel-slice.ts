@@ -1,19 +1,19 @@
 import { SpinOptions } from '../types'
 import { DEG_TO_RAD, Graphics, RAD_TO_DEG, Text } from 'pixi.js-legacy'
 import Wheel from './wheel'
-import {borders, MAX_SLICES, normalizedRadius} from '../utils'
+import { borders, DEFAULT_ACCELERATION_DURATION, DEFAULT_DURATION, DEFAULT_MAX_SPEED } from '../utils'
 
 export default class WheelSlice extends Graphics {
     readonly debug: boolean
-    wheel: Wheel
-    angleStart: number
-    arcSpan: number
-    label: Text
-    // private isSpinning: boolean
+    readonly wheel: Wheel
+    readonly label: Text
+    readonly arcSpan: number
+    readonly color: number
+    readonly text: string
+    readonly lineColor: number
     radius: number
-    color: number
-    lineColor: number
-    text: string
+    angleStart: number
+    isSpinning: boolean
 
     constructor(wheel: Wheel, radius: number, color: number, lineColor = 0x000, angle: number, angleOffset: number, text = 'sample text', debug = false) {
         super()
@@ -25,27 +25,26 @@ export default class WheelSlice extends Graphics {
         this.name = `slice-${Math.ceil(angleOffset / angle)}`
         this.wheel = wheel
         this.text = text
-        // this.pivot.x = 0
-        // this.pivot.y = 0
-        // this.isSpinning = false
         this.debug = debug
         this.angleStart = 0
+        this.isSpinning = false
         this.angle = angleOffset
+        this.angleStart = angleOffset
         this.resize(radius)
     }
 
     spin(delta: number, options: SpinOptions, debug: boolean) {
-        const { totalDuration, accelerationDuration, maxSpeed } = options
-        const decelerationTime = totalDuration - accelerationDuration
+        const { totalAngle, accelerationUntilAngle, maxSpeed } = options
+        const decelerationTime = totalAngle - accelerationUntilAngle
         const currentTime = Date.now() - this.wheel.spinStart
-        const accelerationSpeed = maxSpeed * (currentTime / accelerationDuration)
-        const decelerationSpeed = maxSpeed * (1 - (currentTime - accelerationDuration) / decelerationTime)
+        const accelerationSpeed = maxSpeed * (currentTime / accelerationUntilAngle)
+        const decelerationSpeed = maxSpeed * (1 - (currentTime - accelerationUntilAngle) / decelerationTime)
         // const logAS = Math.log(1 / accelerationSpeed)
 
-        if (currentTime <= accelerationDuration && currentTime <= totalDuration) {
+        if (currentTime <= accelerationUntilAngle && currentTime <= totalAngle) {
             // this.rotation += accelerationSpeed * delta
             this.angle += RAD_TO_DEG * accelerationSpeed * delta
-        } else if (currentTime <= totalDuration) {
+        } else if (currentTime <= totalAngle) {
             // this.rotation += decelerationSpeed * delta
             this.angle += RAD_TO_DEG * decelerationSpeed * delta
         } else {
@@ -56,14 +55,43 @@ export default class WheelSlice extends Graphics {
             }
         }
     }
+    spin2(delta: number, options: SpinOptions, debug: boolean) {
+        const { maxSpeed } = options
+        const totalAngle = options.totalAngle
+        const accelerationUntilAngle = options.accelerationUntilAngle
+        const currentAngle = this.angle - this.angleStart
+        const decelerationAngle = totalAngle - accelerationUntilAngle
+        const accelerationSpeed = maxSpeed * ((currentAngle + 90) / accelerationUntilAngle)
+        const decelerationSpeed = maxSpeed * (1 - (currentAngle - accelerationUntilAngle) / decelerationAngle)
+        // const logAS = Math.log(1 / accelerationSpeed)
+
+        if (currentAngle <= accelerationUntilAngle) {
+            this.angle += RAD_TO_DEG * accelerationSpeed * delta
+        } else if (currentAngle <= totalAngle) {
+            this.angle += RAD_TO_DEG * decelerationSpeed * delta
+        } else {
+            this.angle += 0
+            this.isSpinning = false
+            const zeroSpinningSlices = !this.wheel.slices.some(slice => slice.isSpinning)
+            if (this.wheel.isSpinning && zeroSpinningSlices) {
+                this.wheel.isSpinning = false
+                this.wheel.hasSpinned = true
+            }
+        }
+    }
 
     move(delta: number) {
+        if (!this.wheel.spinOptions) {
+            console.warn('Spin options are missing. Using default values.')
+            this.wheel.spinOptions = {
+                totalAngle: DEFAULT_DURATION,
+                accelerationUntilAngle: DEFAULT_ACCELERATION_DURATION,
+                maxSpeed: DEFAULT_MAX_SPEED
+            }
+        }
+
         if (this.wheel.isSpinning) {
-            this.spin(delta, this.wheel.spinOptions, this.debug)
-        } else {
-            const angleDiff = (this.angle - this.angleStart) % 360
-            if (this.debug && angleDiff > 0) console.debug(angleDiff)
-            this.angleStart = this.angle
+            this.spin2(delta, this.wheel.spinOptions, this.debug)
         }
     }
 

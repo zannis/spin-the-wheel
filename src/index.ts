@@ -11,12 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
         transparent: true,
     })
     const resize = () => {
-        console.log(window.innerWidth, window.innerHeight)
         app.renderer.resize(window.innerWidth, window.innerHeight)
-        const wheel = app.stage.getChildAt(0)
+        const wheel = app.stage.getChildByName('wheel')
         if (wheel instanceof Wheel) wheel.resize({ width: window.innerWidth, height: window.innerHeight })
-        // app.stage.removeChildAt(2)
-        // app.stage.addChild(borders(app.stage))
     }
     document.body.appendChild(app.view)
     // load the texture we need
@@ -25,14 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
         stage.name = 'stage'
 
         const _wheel = () => {
-            const _wheelName = 'wheel'
             const _wheelOptions: WheelOptions = {
                 radius: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 2) * 0.9),
                 slices: 16,
                 winningCopy: 'GET 10% OFF',
                 placeholderCopies: ['text1', 'text2', 'text3'],
             }
-            return new Wheel(app, _wheelName, _wheelOptions)
+            return new Wheel(app, _wheelOptions)
         }
 
         const _button = () => {

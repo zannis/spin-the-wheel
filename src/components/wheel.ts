@@ -1,59 +1,16 @@
 import { Application, Container, Sprite, Texture } from 'pixi.js-legacy'
 import WheelSlice from './wheel-slice'
 import palette from 'distinct-colors'
-import {Resizable, ResizeOptionsRad, ResizeOptionsWH, SpinOptions, WheelOptions} from '../types'
-import { DropShadowFilter } from '@pixi/filter-drop-shadow'
+import { Resizable, ResizeOptionsWH, SpinOptions, WheelOptions } from '../types'
 import * as sound from 'pixi-sound'
-import { borders, MAX_SLICES, normalizedRadius } from '../utils'
+import {MAX_SLICES, MIN_SLICES, normalizedRadius} from '../utils'
 import OuterGraphics from './outer-graphics'
 import CenterGraphics from './center-graphics'
+import Banner from './banner'
 
 interface ArrayConstructor {
     from<T, U>(arrayLike: ArrayLike<T>, mapfn: (v: T, k: number) => U, thisArg?: any): Array<U>
     from<T>(arrayLike: ArrayLike<T>): Array<T>
-}
-
-class Banner extends Container implements Resizable {
-    private banner: Sprite
-    private pin: Sprite
-
-    constructor(radius: number) {
-        super()
-        this.name = 'banner'
-        this.filters = [
-            new DropShadowFilter({
-                rotation: 90,
-                distance: 10,
-            }),
-        ]
-        const _banner = () => {
-            const banner = new Sprite(Texture.from('assets/banner.svg'))
-            banner.name = 'block'
-            banner.anchor.set(0.5)
-            return banner
-        }
-        const _pin = () => {
-            const pin = new Sprite(Texture.from('assets/center-graphics.svg'))
-            pin.name = 'pin'
-            pin.anchor.set(0.5)
-            return pin
-        }
-        this.banner = _banner()
-        this.pin = _pin()
-        this.addChild(this.banner)
-        this.addChild(this.pin)
-        this.resize({ radius })
-    }
-    resize(options: ResizeOptionsRad): void {
-        this.banner.position.x = window.innerWidth / 2
-        this.banner.width = options.radius * 0.9
-        this.banner.height = options.radius * 0.4
-        this.banner.position.y = window.innerHeight / 2 - (options.radius - options.radius / 10)
-        this.pin.width = options.radius / 11
-        this.pin.height = options.radius / 11
-        this.pin.position.x = this.banner.x
-        this.pin.position.y = this.banner.y - options.radius / 20
-    }
 }
 
 export default class Wheel extends Container implements Resizable {
@@ -63,14 +20,16 @@ export default class Wheel extends Container implements Resizable {
     spinStart: number
     isSpinning: boolean
     hasSpinned: boolean
-    private expectedRotation: number
     outer: OuterGraphics
     private banner: Banner
-    constructor(app: Application, name: string, options: WheelOptions) {
+    private pointerAngle: number
+    private center: CenterGraphics
+
+    constructor(app: Application, options: WheelOptions) {
         super()
         let { slices } = options
         const { winningCopy, placeholderCopies, radius } = options
-        if (slices < 3) {
+        if (slices < MIN_SLICES) {
             console.warn('Tried to instantiate a wheel with less than 3 slices.')
             slices = 3
         }
@@ -79,11 +38,12 @@ export default class Wheel extends Container implements Resizable {
             slices = 16
         }
         const _angle = 360 / slices
-        this.name = name
+        this.name = 'wheel'
         this.slices = []
         this.outer = new OuterGraphics(app, radius, slices)
         this.center = new CenterGraphics(radius)
-        this.banner = new Banner(radius)
+        this.banner = new Banner(radius, 315)
+        this.pointerAngle = 270
         this.winningSliceIndex = Math.floor(Math.random() * slices)
         // this.pivot.x = this.width / 2
         // this.pivot.y = this.height / 2
@@ -92,13 +52,7 @@ export default class Wheel extends Container implements Resizable {
         this.addChild(...this.slices)
         this.addChild(this.center)
         this.addChild(this.banner)
-        const minExpectedRotation = 360 - (this.winningSliceIndex + 1) * _angle + 5
-        const maxExpectedRotation = 360 - this.winningSliceIndex * _angle - 5
-        this.expectedRotation = minExpectedRotation + Math.random() * ((maxExpectedRotation - minExpectedRotation) / 2)
-        // this.addChild(borders(this))
     }
-
-    private center: CenterGraphics
 
     private _slices(
         app: Application,
@@ -121,7 +75,7 @@ export default class Wheel extends Container implements Resizable {
             } else {
                 copy = placeholderCopies[Math.floor(Math.random() * placeholderCopies.length)]
             }
-            const wheelPortion = new WheelSlice(this, radius, colours[i % colours.length].num(), undefined, angle, angle * i, copy, true)
+            const wheelPortion = new WheelSlice(this, radius, colours[i % colours.length].num(), undefined, angle, angle * i, copy, false)
 
             result.push(wheelPortion)
         }
@@ -133,13 +87,14 @@ export default class Wheel extends Container implements Resizable {
     }
 
     spin() {
-        this.spinOptions = _calculateSpinOptions(this.expectedRotation)
+        this.spinOptions = this._calculateSpinOptions()
         sound.default.add({
             spin: 'assets/spin.mp3',
         })
-        void sound.default.play('spin')
-        this.spinStart = Date.now()
+        // void sound.default.play('spin')
+        // this.spinStart = Date.now()
         this.isSpinning = true
+        this.slices.forEach(slice => slice.isSpinning = true)
     }
 
     resize(options: ResizeOptionsWH) {
@@ -149,19 +104,19 @@ export default class Wheel extends Container implements Resizable {
         this.banner.resize({ radius })
         this.slices.forEach((slice: WheelSlice) => slice.resize(radius * 0.8))
     }
-}
 
-function _calculateSpinOptions(expectedAngleInDegs: number): SpinOptions {
-    const MAX_SPEED = 0.2
-    const MAX_DURATION = 10000
-    const totalAngleDifference = expectedAngleInDegs
-    const normalizedAngleDifference = totalAngleDifference / 170
-    const totalDuration = normalizedAngleDifference / MAX_SPEED
-    const actualDuration = Math.min(totalDuration * 1000, MAX_DURATION)
-    console.log({ totalAngleDifference, actualDuration, MAX_SPEED })
-    return {
-        totalDuration: actualDuration,
-        accelerationDuration: actualDuration / 3,
-        maxSpeed: MAX_SPEED,
+    _calculateSpinOptions(): SpinOptions {
+        const _angle = 360 / this.slices.length
+        const minExpectedRotation = 360 * 4 + (this.pointerAngle)  - (this.winningSliceIndex + 1) * _angle  - (_angle * 0.1)
+        const maxExpectedRotation = 360 * 4  + (this.pointerAngle)  - this.winningSliceIndex * (_angle * 0.9)
+        const totalAngleDifference = minExpectedRotation + Math.random() * ((maxExpectedRotation - minExpectedRotation) / 2)
+        const MAX_SPEED = 0.2
+        console.log({ totalAngleDifference, MAX_SPEED })
+        return {
+            totalAngle: totalAngleDifference,
+            accelerationUntilAngle: totalAngleDifference / 4,
+            maxSpeed: MAX_SPEED,
+        }
     }
+
 }

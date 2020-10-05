@@ -8,8 +8,8 @@ export interface WheelOptions {
 }
 
 export interface SpinOptions {
-    totalDuration: number
-    accelerationDuration: number
+    totalAngle: number
+    accelerationUntilAngle: number
     maxSpeed: number
 }
 

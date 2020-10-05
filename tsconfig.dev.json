@@ -10,15 +10,17 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "baseUrl": "./src",
-    "types": ["node", "pixi.js-legacy", "@pixi/filter-drop-shadow"],
+    "types": ["node", "pixi.js-legacy", "@pixi/filter-drop-shadow", "jest"],
     "outDir": "./dist",
     "moduleResolution": "node"
   },
   "include": [
-    "./src/*.ts",
+    "./src/**/*.ts",
+    "./*.js",
     "./tsconfig.*.json"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./src/**/*.ts"
   ]
 }
