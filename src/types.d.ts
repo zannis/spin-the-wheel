@@ -1,4 +1,4 @@
-import { Application, Container, Graphics } from 'pixi.js-legacy'
+import { Application, Container, Graphics } from './pixi'
 
 export interface WheelOptions {
     radius: number
@@ -10,6 +10,7 @@ export interface WheelOptions {
 export interface SpinOptions {
     totalAngle: number
     accelerationUntilAngle: number
+    decelerationStartAngle: number
     maxSpeed: number
 }
 

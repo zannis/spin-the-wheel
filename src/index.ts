@@ -3,6 +3,10 @@ import Wheel from './components/wheel'
 import { WheelOptions } from './types'
 import { borders } from './utils'
 
+declare global {
+    interface Window { wheel: { spin(): void } }
+}
+
 utils.skipHello()
 window.addEventListener('DOMContentLoaded', () => {
     const app = new Application({
@@ -28,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 winningCopy: 'GET 10% OFF',
                 placeholderCopies: ['text1', 'text2', 'text3'],
             }
-            return new Wheel(app, _wheelOptions)
+            return new Wheel(_wheelOptions)
         }
 
         const _button = () => {
@@ -51,6 +55,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         stage.addChild(_wheel())
         stage.addChild(_button())
+        window.wheel = {
+            spin: () => {
+                const wheel = <Wheel>stage.getChildAt(0)
+                if (!wheel.isSpinning && !wheel.hasSpinned) {
+                    wheel.spin()
+                }
+            }
+        }
         // stage.addChild(borders(stage))
         app.ticker.add((delta) => {
             const wheel = stage.getChildAt(0)

@@ -1,9 +1,9 @@
-import { Application, Container, Sprite, Texture } from 'pixi.js-legacy'
+import { Application, Container } from 'pixi.js-legacy'
 import WheelSlice from './wheel-slice'
 import palette from 'distinct-colors'
 import { Resizable, ResizeOptionsWH, SpinOptions, WheelOptions } from '../types'
-import * as sound from 'pixi-sound'
-import {MAX_SLICES, MIN_SLICES, normalizedRadius} from '../utils'
+import sound from 'pixi-sound'
+import { MAX_SLICES, MIN_SLICES, normalizedRadius } from '../utils'
 import OuterGraphics from './outer-graphics'
 import CenterGraphics from './center-graphics'
 import Banner from './banner'
@@ -15,7 +15,7 @@ interface ArrayConstructor {
 
 export default class Wheel extends Container implements Resizable {
     slices: WheelSlice[]
-    readonly winningSliceIndex: number
+    winningSliceIndex: number
     spinOptions: SpinOptions
     spinStart: number
     isSpinning: boolean
@@ -25,7 +25,7 @@ export default class Wheel extends Container implements Resizable {
     private pointerAngle: number
     private center: CenterGraphics
 
-    constructor(app: Application, options: WheelOptions) {
+    constructor(options: WheelOptions) {
         super()
         let { slices } = options
         const { winningCopy, placeholderCopies, radius } = options
@@ -40,14 +40,14 @@ export default class Wheel extends Container implements Resizable {
         const _angle = 360 / slices
         this.name = 'wheel'
         this.slices = []
-        this.outer = new OuterGraphics(app, radius, slices)
+        this.outer = new OuterGraphics(radius, slices)
         this.center = new CenterGraphics(radius)
         this.banner = new Banner(radius, 315)
         this.pointerAngle = 270
         this.winningSliceIndex = Math.floor(Math.random() * slices)
         // this.pivot.x = this.width / 2
         // this.pivot.y = this.height / 2
-        this.slices = this._slices(app, slices, 5, winningCopy, this.winningSliceIndex, placeholderCopies, Math.floor(radius * 0.8), _angle)
+        this.slices = this._slices(slices, 5, winningCopy, this.winningSliceIndex, placeholderCopies, Math.floor(radius * 0.8), _angle)
         this.addChild(this.outer)
         this.addChild(...this.slices)
         this.addChild(this.center)
@@ -55,7 +55,6 @@ export default class Wheel extends Container implements Resizable {
     }
 
     private _slices(
-        app: Application,
         slices: number,
         colors: number,
         winningCopy: string,
@@ -83,18 +82,22 @@ export default class Wheel extends Container implements Resizable {
     }
 
     move(delta: number) {
-        if (this.isSpinning && !this.hasSpinned) this.slices.forEach((slice) => slice.move(delta))
+        if (this.isSpinning && !this.hasSpinned) {
+            this.slices.forEach((slice) => slice.move(delta))
+        }
     }
 
     spin() {
         this.spinOptions = this._calculateSpinOptions()
-        sound.default.add({
+        sound.add({
             spin: 'assets/spin.mp3',
         })
         // void sound.default.play('spin')
         // this.spinStart = Date.now()
         this.isSpinning = true
-        this.slices.forEach(slice => slice.isSpinning = true)
+        this.slices.forEach((slice) => {
+            slice.isSpinning = true
+        })
     }
 
     resize(options: ResizeOptionsWH) {
@@ -107,16 +110,15 @@ export default class Wheel extends Container implements Resizable {
 
     _calculateSpinOptions(): SpinOptions {
         const _angle = 360 / this.slices.length
-        const minExpectedRotation = 360 * 4 + (this.pointerAngle)  - (this.winningSliceIndex + 1) * _angle  - (_angle * 0.1)
-        const maxExpectedRotation = 360 * 4  + (this.pointerAngle)  - this.winningSliceIndex * (_angle * 0.9)
+        const minExpectedRotation = 360 * 4 + this.pointerAngle - (this.winningSliceIndex + 1) * _angle + _angle * 0.1
+        const maxExpectedRotation = 360 * 4 + this.pointerAngle - this.winningSliceIndex * _angle - _angle * 0.1
         const totalAngleDifference = minExpectedRotation + Math.random() * ((maxExpectedRotation - minExpectedRotation) / 2)
         const MAX_SPEED = 0.2
-        console.log({ totalAngleDifference, MAX_SPEED })
         return {
             totalAngle: totalAngleDifference,
             accelerationUntilAngle: totalAngleDifference / 4,
+            decelerationStartAngle: (totalAngleDifference * 3) / 5,
             maxSpeed: MAX_SPEED,
         }
     }
-
 }

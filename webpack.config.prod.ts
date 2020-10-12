@@ -12,16 +12,9 @@ module.exports = {
             test: /\.ts$/,
             loader: 'awesome-typescript-loader',
             options: {
-                configFileName: 'tsconfig.dev.json'
+                configFileName: 'tsconfig.prod.json'
             }
         },
-        // {
-        //     test: /\.(js)$/,
-        //     exclude: /node_modules/,
-        //     use: {
-        //         loader: 'babel-loader'
-        //     }
-        // },
         {
             test: /\.css$/,
             loader: [
@@ -30,8 +23,8 @@ module.exports = {
             ]
         },
         {
-            test: /\.(woff|woff2|eot|ttf|svg)$/,
-            loader: 'url-loader?limit=100000'
+            test: /\.(woff|woff2|eot|ttf|svg|mp3)$/,
+            loader: 'file-loader'
         }]
     },
     optimization: {

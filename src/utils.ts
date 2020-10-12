@@ -26,6 +26,3 @@ export function normalizedRadius(value: number) {
 
 export const MIN_SLICES = 3
 export const MAX_SLICES = 16
-export const DEFAULT_DURATION = 5000
-export const DEFAULT_ACCELERATION_DURATION = 2000
-export const DEFAULT_MAX_SPEED = 0.2
