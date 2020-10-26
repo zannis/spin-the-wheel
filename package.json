@@ -20,12 +20,13 @@
   "dependencies": {
     "@pixi/filter-drop-shadow": "^3.1.1",
     "distinct-colors": "^3.0.0",
-    "fontsource-nunito-sans": "^3.0.3",
+    "fontsource-nunito-sans": "^3.0.9",
     "pixi-sound": "^3.0.5",
     "pixi.js-legacy": "^5.3.3"
   },
   "devDependencies": {
     "@types/copy-webpack-plugin": "^6.0.0",
+    "@types/jest": "^26.0.15",
     "@types/jsdom": "^16.2.4",
     "@types/node": "^14.10.1",
     "@types/webpack": "^4.41.22",
@@ -50,7 +51,7 @@
     "prettier": "^2.1.2",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^4.1.0",
-    "ts-jest": "^26.4.0",
+    "ts-jest": "^26.4.2",
     "ts-node": "^9.0.0",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "typescript": "^3.9.7",

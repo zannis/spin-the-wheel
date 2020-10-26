@@ -5,19 +5,22 @@
     "typeRoots": [
       "node_modules/pixi.js-legacy"
     ],
+    "lib": ["es6", "dom"],
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "baseUrl": "./src",
-    "types": ["pixi.js-legacy", "@pixi/filter-drop-shadow"],
+    "types": ["node", "pixi.js-legacy", "@pixi/filter-drop-shadow"],
     "outDir": "./dist",
     "moduleResolution": "node"
   },
   "include": [
     "./src/**/*.ts",
+    "./*.js",
     "./tsconfig.*.json"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./src/__tests__/**/*.ts"
   ]
 }

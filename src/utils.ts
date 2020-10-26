@@ -21,7 +21,7 @@ export function borders(element: Container | Graphics) {
 }
 
 export function normalizedRadius(value: number) {
-    return Math.min(value, Math.min(Math.floor(window.innerWidth / 2), window.innerHeight / 2) * 0.9)
+    return
 }
 
 export const MIN_SLICES = 3

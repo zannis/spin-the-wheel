@@ -6,8 +6,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: ['./tsconfig.dev.json'],
     ecmaFeatures: {
-      experimentalObjectRestSpread: true,
-      jsx: true
+      experimentalObjectRestSpread: true
     },
     sourceType: "module"
   },
@@ -15,7 +14,7 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    'jest/globals': true
+    jest: true
   },
 
   plugins: [
@@ -163,5 +162,11 @@ module.exports = {
     "standard/object-curly-even-spacing": [2, "either"],
     "standard/array-bracket-even-spacing": [2, "either"],
     "standard/computed-property-even-spacing": [2, "even"],
+
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error"
   }
 };

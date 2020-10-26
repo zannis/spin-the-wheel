@@ -3,7 +3,9 @@
     "esModuleInterop": true,
     "target": "es5",
     "typeRoots": [
-      "node_modules/pixi.js-legacy"
+      "node_modules/pixi.js-legacy",
+      "./src/types",
+      "node_modules/@types"
     ],
     "lib": ["es6", "dom"],
     "noImplicitAny": true,
@@ -17,10 +19,11 @@
   "include": [
     "./src/**/*.ts",
     "./*.js",
-    "./tsconfig.*.json"
+    "./tsconfig.*.json",
+    "./src/__tests__/unit/*.spec.ts",
+    "./src/__tests__/unit/**/*.spec.ts"
   ],
   "exclude": [
-    "node_modules",
-    "./src/**/*.ts"
+    "node_modules"
   ]
 }

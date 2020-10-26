@@ -1,4 +1,4 @@
-import { Application, Container } from 'pixi.js-legacy'
+import { Container } from 'pixi.js-legacy'
 import WheelSlice from './wheel-slice'
 import palette from 'distinct-colors'
 import { Resizable, ResizeOptionsWH, SpinOptions, WheelOptions } from '../types'
@@ -17,7 +17,6 @@ export default class Wheel extends Container implements Resizable {
     slices: WheelSlice[]
     winningSliceIndex: number
     spinOptions: SpinOptions
-    spinStart: number
     isSpinning: boolean
     hasSpinned: boolean
     outer: OuterGraphics
@@ -30,11 +29,11 @@ export default class Wheel extends Container implements Resizable {
         let { slices } = options
         const { winningCopy, placeholderCopies, radius } = options
         if (slices < MIN_SLICES) {
-            console.warn('Tried to instantiate a wheel with less than 3 slices.')
+            console.debug('Tried to instantiate a wheel with less than 3 slices.')
             slices = 3
         }
         if (slices > MAX_SLICES) {
-            console.warn('Tried to instantiate a wheel with more than 16 slices.')
+            console.debug('Tried to instantiate a wheel with more than 16 slices.')
             slices = 16
         }
         const _angle = 360 / slices
@@ -84,6 +83,7 @@ export default class Wheel extends Container implements Resizable {
     move(delta: number) {
         if (this.isSpinning && !this.hasSpinned) {
             this.slices.forEach((slice) => slice.move(delta))
+            this.outer.indicators.forEach((ind) => ind.move(this.slices[0].angle))
         }
     }
 
@@ -101,7 +101,7 @@ export default class Wheel extends Container implements Resizable {
     }
 
     resize(options: ResizeOptionsWH) {
-        const radius = normalizedRadius(Math.min(options.width, options.height) / 2)
+        const radius = Math.min(Math.min(options.width, options.height) / 2, Math.min(Math.floor(window.innerWidth / 2), window.innerHeight / 2) * 0.9)
         this.center.resize({ radius })
         this.outer.resize({ radius })
         this.banner.resize({ radius })
