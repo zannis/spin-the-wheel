@@ -20,9 +20,5 @@ export function borders(element: Container | Graphics) {
     return result
 }
 
-export function normalizedRadius(value: number) {
-    return
-}
-
 export const MIN_SLICES = 3
 export const MAX_SLICES = 16

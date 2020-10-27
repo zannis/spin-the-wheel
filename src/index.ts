@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const wheel = app.stage.getChildByName('wheel')
         if (wheel instanceof Wheel) wheel.resize({ width: window.innerWidth, height: window.innerHeight })
     }
-    document.getElementById('wpin-the-wheel').appendChild(app.view)
+    document.getElementById('spin-the-wheel').appendChild(app.view)
     // load the texture we need
     app.loader.load(() => {
         const stage: Container = app.stage
@@ -74,7 +74,7 @@ window.addEventListener('DOMContentLoaded', () => {
         app.ticker.add((delta) => {
             const wheel = stage.getChildByName('wheel')
             if (wheel instanceof Wheel) wheel.move(delta)
-            else console.warn(`wheel was a(n) ${typeof wheel}. ${JSON.stringify(wheel.name)}`)
+            else console.warn(`wheel was a(n) ${typeof wheel}.}`)
         })
     })
     window.addEventListener('resize', resize, false)
