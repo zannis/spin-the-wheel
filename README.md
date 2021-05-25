@@ -1,6 +1,6 @@
 # spin-the-wheel
 
-A WebGL/Canvas implementation of a fully programmable spinning wheel based on pixi.js
+A WebGL/Canvas implementation of a fully programmable spinning wheel based on pixi.js written in TypeScript.
 
 Current features:
 * Fully resizable
